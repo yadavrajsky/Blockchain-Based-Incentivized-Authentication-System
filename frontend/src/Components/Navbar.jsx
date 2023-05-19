@@ -1,22 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { FaUserCircle, FaSignOutAlt } from "react-icons/fa"; // import required icons
+import { Link } from "react-router-dom";
+import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { clearErrorsAndMessages, logoutUser } from "../features/auth/authSlice";
 import { showToast } from "./utils/showToast";
-
 const Navbar = () => {
-  const [showMenu, setShowMenu] = useState(false);
-  const [showHamMenu, setHamShowMenu] = useState(false);
+  const [showMenu, setShowMenu] = useState(() => {
+    return false;
+  });
+  const [showHamMenu, setHamShowMenu] = useState(() => {
+    return false;
+  });
   const { user, isAuthenticated, message, error } = useSelector(
     (state) => state.auth
   );
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const handleMenuToggle = () => {
     setShowMenu(!showMenu);
+    setHamShowMenu(false);
+
   };
   const handleHamMenuToggle = () => {
     setHamShowMenu(!showHamMenu);
@@ -24,15 +27,14 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logoutUser({ wallet: user }));
     handleMenuToggle();
+    setHamShowMenu(false);
   };
   useEffect(() => {
     if (message) {
       showToast(false, message, "Auth");
-      navigate("/login");
     } else if (error) showToast(error, false, "Auth");
     dispatch(clearErrorsAndMessages());
   }, [error, message]);
-
   return (
     <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -87,7 +89,6 @@ const Navbar = () => {
               </Link>
             </>
           )}
-
           <button
             data-collapse-toggle="navbar-sticky"
             type="button"
@@ -115,7 +116,7 @@ const Navbar = () => {
         <div
           className={`${
             showMenu ? "flex" : "hidden" // apply conditional rendering to show/hide menu items
-          } items-center space-x-5 justify-between w-full md:w-auto mt-4 md:mt-0 md:order-1 md:flex flex-col md:flex-row md:justify-end`}
+          } items-center md:space-x-5 justify-between w-full md:w-auto mt-4 md:mt-0 md:order-1 md:flex flex-col md:flex-row md:justify-end`}
           id="navbar-sticky"
         >
           <Link
@@ -136,7 +137,7 @@ const Navbar = () => {
           {isAuthenticated && (
             <Link
               to={"/dashboard"}
-              className="block w-full text-center py-2  text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+              className="block w-full text-center py-2 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
               onClick={handleMenuToggle}
             >
               Dashboard
@@ -147,5 +148,4 @@ const Navbar = () => {
     </nav>
   );
 };
-
 export default Navbar;

@@ -20,7 +20,7 @@ const options = {
 
 
 // replace with your contract ABI
-const contractAddress = '0xFC45f03C579d85f7Daf96924E975f1A7226A3fD6'; // replace with your contract address on the Ganache network
+const contractAddress = '0x20C19d65C13fF8e6aA68d7Ce72084864aa96F039'; // replace with your contract address on the Ganache network
 
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
@@ -41,7 +41,7 @@ const contract = new web3.eth.Contract(contractABI, contractAddress);
 //     console.error(`Error depositing ETH: ${error}`);
 //   });
 
-// get Balance 
+// // get Balance 
 // contract.methods.getCompanyDeposit().call({ from: account.address }, (error, result) => {
 //     if (error) {
 //         console.error(error);
@@ -49,24 +49,38 @@ const contract = new web3.eth.Contract(contractABI, contractAddress);
 //         console.log(result);
 //     }
 // });
-// send(options).then(console.log)
+// // send(options).then(console.log)
 // console.log(data);
 
 
 // module.exports = contract;
-const increaseTime = async (seconds) => {
-    await web3.currentProvider.send({
-      jsonrpc: '2.0',
-      method: 'evm_increaseTime',
-      params: [seconds],
-      id: new Date().getTime(),
-    }, (error, result) => {
-      if (error) {
-        console.error('Error:', error);
-      } else {
-        console.log('Time increased by', seconds, 'seconds');
-      }
-    });
-  };
-
-  increaseTime(86400)
+// const increaseTime = async (seconds) => {
+//     await web3.currentProvider.send({
+//       jsonrpc: '2.0',
+//       method: 'evm_increaseTime',
+//       params: [seconds],
+//       id: new Date().getTime(),
+//     }, (error, result) => {
+//       if (error) {
+//         console.error('Error:', error);
+//       } else {
+//         console.log('Time increased by', seconds, 'seconds');
+//       }
+//     });
+//   };
+//   const resetTime = async () => {
+//     await web3.currentProvider.send({
+//       jsonrpc: '2.0',
+//       method: 'evm_revert',
+//       params: [],
+//       id: new Date().getTime(),
+//     }, (error, result) => {
+//       if (error) {
+//         console.error('Error:', error);
+//       } else {
+//         console.log('Time reset to current system time');
+//       }
+//     });
+//   };
+//   resetTime()
+//   increaseTime(86400) 

@@ -344,5 +344,5 @@ const contractABI=  [
     "stateMutability": "nonpayable",
     "type": "function"
   }
-]
+];
 module.exports=contractABI;

@@ -78,8 +78,10 @@ contract CompanyRegistry {
                 } else if (currentDay - lastLoginDay >= 2) {
                     LoginDetails[walletAddress].totalLoggedInDays = 1;
                 }
-              LoginDetails[walletAddress].lastLoginTime=block.timestamp;
+            LoginDetails[walletAddress].lastLoginTime=block.timestamp;
             }
+            LoginDetails[walletAddress].isLoggedIn=true;
+
         } else {
             User memory userInfo = userMap[walletAddress];
             LoginDetails[walletAddress] = Login({

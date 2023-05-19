@@ -3,7 +3,7 @@ const { web3, Web3, account } = require("./web3Provider")
 const contractABI = require("./contractABI");
 const ErrorHandler = require("./errorHandler");
 // contract Address
-const contractAddress = "0xFC45f03C579d85f7Daf96924E975f1A7226A3fD6";
+const contractAddress = "0x20C19d65C13fF8e6aA68d7Ce72084864aa96F039";
 // contract instance
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 // register Company
