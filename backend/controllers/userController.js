@@ -24,16 +24,18 @@ const {
 
 // Register a User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
+
   const { wallet, password } = req.body;
   const response = await registeruser(wallet, password);
-
+  // console.log("🚀 ~ file: userController.js:29 ~ exports.registerUser=catchAsyncErrors ~ response:", response);
   if (response.status === true) {
     await User.create({
       wallet,
     });
-    res.status(200).json(response);
+    return res.status(200).json({...response,
+    message:"User registered successfully"});
   }
-  res.status(400).json(response);
+  return res.status(400).json(response);
 });
 // Login User
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {

@@ -1,12 +1,8 @@
 import axios from 'axios'
 const authService = {
     registerUser: async (user) => {
-
-
         const response = await axios.post('/register', user);
         return response.data
-
-
     },
     loginUser: async (user) => {
         try {

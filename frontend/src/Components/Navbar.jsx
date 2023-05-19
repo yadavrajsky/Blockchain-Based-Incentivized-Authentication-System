@@ -4,15 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle, FaSignOutAlt } from "react-icons/fa"; // import required icons
 import { clearErrorsAndMessages, logoutUser } from "../features/auth/authSlice";
-import { toast } from "react-toastify";
+import { showToast } from "./utils/showToast";
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showHamMenu, setHamShowMenu] = useState(false);
-  const { user, isAuthenticated ,message,error} = useSelector((state) => state.auth);
+  const { user, isAuthenticated, message, error } = useSelector(
+    (state) => state.auth
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   const handleMenuToggle = () => {
     setShowMenu(!showMenu);
@@ -20,27 +21,23 @@ const Navbar = () => {
   const handleHamMenuToggle = () => {
     setHamShowMenu(!showHamMenu);
   };
-  const handleLogout=()=>{
-    dispatch(logoutUser({wallet:user}));
-    handleMenuToggle()
-
-  }
+  const handleLogout = () => {
+    dispatch(logoutUser({ wallet: user }));
+    handleMenuToggle();
+  };
   useEffect(() => {
     if (message) {
-
-        toast.success(message)
-        navigate("/login")
-    }
-    else if (error)
-        toast.error(error)
+      showToast(false, message, "Auth");
+      navigate("/login");
+    } else if (error) showToast(error, false, "Auth");
     dispatch(clearErrorsAndMessages());
-}, [error, message])
-  
+  }, [error, message]);
+
   return (
     <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link to={"/"} className="flex items-center">
-          <img src="blockauth.png" className="h-8 mr-3" alt="blockauth Logo" />
+          <img src="/blockauth.png" className="h-8 mr-3" alt="blockauth Logo" />
         </Link>
         <div className="flex md:order-2 space-x-3">
           {isAuthenticated ? (
@@ -61,7 +58,10 @@ const Navbar = () => {
                     className="block px-4 w-full rounded-b-lg py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out text-center font-semibold"
                     onClick={handleLogout}
                   >
-                    <FaSignOutAlt className="inline-block mr-2 text-red-500" size={16} />
+                    <FaSignOutAlt
+                      className="inline-block mr-2 text-red-500"
+                      size={16}
+                    />
                     Logout
                   </button>
                 </div>
@@ -69,20 +69,21 @@ const Navbar = () => {
             </div>
           ) : (
             <>
-             <Link to={"/register"}>
-              <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-               Register
-              </button></Link>
+              <Link to={"/register"}>
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Register
+                </button>
+              </Link>
               <Link to={"/login"}>
-              <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                Login
-              </button>
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Login
+                </button>
               </Link>
             </>
           )}
@@ -134,14 +135,13 @@ const Navbar = () => {
           </Link>
           {isAuthenticated && (
             <Link
-            to={"/dashboard"}
-            className="block w-full text-center py-2  text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-            onClick={handleMenuToggle}
-          >
-            Dashboard
-          </Link>
+              to={"/dashboard"}
+              className="block w-full text-center py-2  text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+              onClick={handleMenuToggle}
+            >
+              Dashboard
+            </Link>
           )}
-          
         </div>
       </div>
     </nav>

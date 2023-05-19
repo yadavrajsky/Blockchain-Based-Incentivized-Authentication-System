@@ -1,4 +1,30 @@
- const contractABI = [
+// const fs = require('fs/promises');
+// const path = require('path');
+
+// // Specify the relative path to your JSON file
+// const relativePath = 'blockchain/build/contracts/AuthenticationServiceProvider.json';
+
+// // Resolve the absolute path
+// const filePath = path.resolve(relativePath);
+
+// async function readJSONFile() {
+//   try {
+//     // Read the file contents
+//     const data = await fs.readFile(filePath, 'utf8');
+
+//     // Parse the JSON data
+//     const jsonData = JSON.parse(data);
+
+//     // Do something with the JSON data
+//     console.log(jsonData.abi);
+//     return jsonData.abi
+//   } catch (error) {
+//     console.error('Error reading or parsing JSON:', error);
+//     return error
+//   }
+// }
+
+const contractABI= [
   {
     "inputs": [],
     "stateMutability": "nonpayable",

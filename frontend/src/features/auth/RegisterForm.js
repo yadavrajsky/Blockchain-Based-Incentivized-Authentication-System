@@ -1,26 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from 'react-redux';
+import { Oval } from 'react-loader-spinner'
 import { clearErrorsAndMessages, registerUser } from './authSlice';
 import UserForm from './UserForm';
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { showToast } from '../../Components/utils/showToast';
 const RegisterForm = () => {
-    const { isAuthenticated } = useSelector((state) => state.auth);
+    const { status, error, message, isAuthenticated } = useSelector((state) => state.auth);
     const navigate = useNavigate();
-
     const dispatch = useDispatch();
-    const { status, error, message } = useSelector((state) => state.auth);
-
     const handleRegister = (userData) => {
         dispatch(registerUser(userData));
-
     }
     useEffect(() => {
         if (message)
-            toast.success(message)
+            showToast(false, message, "Auth")
         else if (error)
-            toast.error(error)
+            showToast(error, false, "Auth")
         dispatch(clearErrorsAndMessages());
     }, [error, message])
     useEffect(() => {
@@ -29,7 +26,22 @@ const RegisterForm = () => {
     }, [])
     return (
         <>
-            {status === 'loading' ? 'Loading...' :
+            {status === 'loading' ?
+                <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 h-screen overflow:hidden'>
+                    <Oval
+                        height={80}
+                        width={80}
+                        color="#4fa94d"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                        ariaLabel='oval-loading'
+                        secondaryColor="#4fa94d"
+                        strokeWidth={2}
+                        strokeWidthSecondary={2}
+                    />
+                </div>
+                :
                 <>
                     <form>
                         <h2 className='text-red-700 text-3xl my-5 text-center'>Register</h2>

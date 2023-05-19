@@ -2,7 +2,7 @@ const {web3,Web3,account}=require("./web3Provider")
 // Contract ABI
 const contractABI = require("./contractABI");
 // contract Address
-const contractAddress = "0x81db00b00a04c0764DB6c5E7A4e523648D199091";
+const contractAddress = "0xF2891E289C291930E76ee6F99d122b560CB9e5A5";
 // contract instance
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 // register Company
@@ -56,23 +56,15 @@ const registeruser = async (userWalletAddress, userPasswordHash) => {
       web3.utils.utf8ToHex(userPasswordHash),
       64
     );
-    const data = await contract.methods
+    const register = await contract.methods
       .registerUser(userWalletAddress, pass32bytes)
-      .send({ from: account.address, gas: 3000000 });
-    // console.log(
-    //   "🚀 ~ file: contractMethodsProvider.js:377 ~ registeruser ~ data:",
-    //   data
-    // );
-
+     const data=await register.send({ from: account.address, gas: 3000000 });
     return {
       status: true,
       data: data,
     };
   } catch (error) {
-    // console.log(
-    //   "🚀 ~ file: contractMethodsProvider.js:389 ~ registeruser ~ error:",
-    //   error
-    // );
+    console.log(error);
     return {
       status: false,
       data: error,
