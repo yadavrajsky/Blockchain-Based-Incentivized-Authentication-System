@@ -14,11 +14,15 @@ const RegisterForm = () => {
         dispatch(registerUser(userData));
     }
     useEffect(() => {
-        if (message)
+
+        if (message) {
             showToast(false, message, "Auth")
-        else if (error)
+        }
+        else if (error) {
             showToast(error, false, "Auth")
+        }
         dispatch(clearErrorsAndMessages());
+
     }, [error, message])
     useEffect(() => {
         if (isAuthenticated)

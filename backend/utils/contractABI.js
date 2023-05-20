@@ -24,7 +24,7 @@
 //   }
 // }
 
-const contractABI= [
+const contractABI=  [
   {
     "inputs": [],
     "stateMutability": "nonpayable",

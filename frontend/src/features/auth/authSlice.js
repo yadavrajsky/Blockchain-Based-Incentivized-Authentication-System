@@ -35,7 +35,7 @@ export const logoutUser = createAsyncThunk(
     async (user, { rejectWithValue }) => {
         try {
             const response = await axios.post('/logout', user);
-            console.log(response); 
+            // console.log(response); 
             return response.data ;
         } catch (error) {
             // Return the error message as the payload of the rejected action
@@ -67,20 +67,18 @@ export const authSlice = createSlice({
         builder
             .addCase(registerUser.pending, (state) => {
 
-                state.status = 'idle';
+                state.status = 'loading';
             })
             .addCase(registerUser.fulfilled, (state, action) => {
 
                 state.status = 'succeeded';
-                state.message = action.payload.message
+                state.message = action.payload.message;
                 state.transaction = action.payload.data;
                 state.error = null;
-                console.log(state);
             })
             .addCase(registerUser.rejected, (state, action) => {
-                console.log(action.payload);
                 state.status = 'failed';
-                state.error = action.payload?.data?.data?.reason;
+                state.error = action.payload?.message?action.payload?.message: action.payload?.data?.reason;
             })
             .addCase(loginUser.pending, (state) => {
                 state.status = 'loading';
@@ -90,11 +88,14 @@ export const authSlice = createSlice({
                 state.status = 'succeeded';
                 state.isAuthenticated = action.payload.isAuthenticated;
                 state.user = action.payload.user;
+                state.message = action.payload.message;
                 state.error = null;
+
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                console.log(action.payload);
+                state.error =  action.payload?.message?action.payload?.message: action.payload?.data?.data?.reason;
             })
             .addCase(logoutUser.pending, (state) => {
                 state.status = 'loading';
@@ -105,10 +106,14 @@ export const authSlice = createSlice({
                 state.isAuthenticated = action.payload.isAuthenticated;
                 state.user = action.payload.user;
                 state.error = null;
+                state.message = action.payload.message;
+
+                
+
             })
             .addCase(logoutUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.error = action.payload?.message?action.payload?.message: action.payload?.data?.reason;
             });
     },
 });

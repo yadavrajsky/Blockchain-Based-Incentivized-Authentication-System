@@ -1,8 +1,9 @@
-const {web3,Web3,account}=require("./web3Provider")
+const { web3, Web3, account } = require("./web3Provider")
 // Contract ABI
 const contractABI = require("./contractABI");
+const ErrorHandler = require("./errorHandler");
 // contract Address
-const contractAddress = "0xF2891E289C291930E76ee6F99d122b560CB9e5A5";
+const contractAddress = "0xFC45f03C579d85f7Daf96924E975f1A7226A3fD6";
 // contract instance
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 // register Company
@@ -58,7 +59,7 @@ const registeruser = async (userWalletAddress, userPasswordHash) => {
     );
     const register = await contract.methods
       .registerUser(userWalletAddress, pass32bytes)
-     const data=await register.send({ from: account.address, gas: 3000000 });
+    const data = await register.send({ from: account.address, gas: 3000000 });
     return {
       status: true,
       data: data,
@@ -73,20 +74,49 @@ const registeruser = async (userWalletAddress, userPasswordHash) => {
 };
 
 // fetch Login Status
-const getIsLoggedInStatus = async (CompanyAddress, userAddress) => {
+const getIsLoggedInStatus = async (userAddress) => {
   try {
-    const response = await contract.methods
-      .getIsLoggedInStatus(CompanyAddress, userAddress)
-      .call();
-    // console.log("🚀 ~ file: contractMethodsProvider.js:115 ~ getIsLoggedInStatus ~ response:", response);
+    const response = await contract.methods.getIsLoggedInStatus(account.address, userAddress).call()
     return response;
   } catch (error) {
-    // console.log("🚀 ~ file: contractMethodsProvider.js:125 ~ getIsLoggedInStatus ~ error:", error);
+
+    return error
+  }
+};
+
+//Does Login Exists
+const doesLoginExist = async (userAddress) => {
+  try {
+    const response = await contract.methods.doesLoginExist(userAddress).call()
+    // console.log("🚀 ~ file: contractMethodsProvider.js:93 ~ doesLoginExist ~ response:", response);
+    // send({
+    //   from:account.address
+    // })
+    return response;
+
+  } catch (error) {
     return error;
   }
-  // .then(result => console.log(result))
-  // .catch(error => console.error(error));
-};
+
+}
+
+const getTotalLoggedInDays = async (userWalletAddress) => {
+  try {
+    const response = await contract.methods.gettotalLoggedInDays(account.address, userWalletAddress).call()
+    return {
+      status: true,
+      totalLoggedInDays: response
+    }
+
+  } catch (error) {
+    return {
+      status: false,
+      error: error
+    };
+  }
+
+}
+
 
 // login user
 const loginUser = async (userWalletAddress, userPasswordHash) => {
@@ -102,11 +132,12 @@ const loginUser = async (userWalletAddress, userPasswordHash) => {
     return {
       status: true,
       data: data,
+
     };
   } catch (error) {
     return {
       status: false,
-      data: error,
+      error: error,
     };
   }
 };
@@ -117,11 +148,6 @@ const logoutUser = async (walletAddress) => {
     const response = await contract.methods
       .logoutUser(walletAddress)
       .send({ from: account.address });
-    console.log(
-      "🚀 ~ file: contractMethodsProvider.js:139 ~ logoutUser ~ response:",
-      response
-    );
-
     return {
       status: true,
       data: response,
@@ -153,4 +179,6 @@ module.exports = {
   getIsLoggedInStatus,
   getLastLoginTime,
   loginUser,
+  doesLoginExist,
+  getTotalLoggedInDays
 };

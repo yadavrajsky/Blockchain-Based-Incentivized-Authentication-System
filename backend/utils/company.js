@@ -10,7 +10,7 @@ const contractABI = require('./contractABI')
 
 // Set the default account for the provider instance to your own Ethereum account
 
-const privateKey = '0x8992dd9801c464abf4269fe7395c79daddba447a61ff8ba40dc345a764b97cf0';
+const privateKey = '0x22c8d28d1c1a5ef9783e73e048d63b174213ede461627a6d3248207750d43e52';
 const account = web3.eth.accounts.privateKeyToAccount(privateKey);
 web3.eth.defaultAccount = account.address;
 const options = {
@@ -20,13 +20,13 @@ const options = {
 
 
 // replace with your contract ABI
-const contractAddress = '0xF2891E289C291930E76ee6F99d122b560CB9e5A5'; // replace with your contract address on the Ganache network
+const contractAddress = '0xFC45f03C579d85f7Daf96924E975f1A7226A3fD6'; // replace with your contract address on the Ganache network
 
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-contract.methods.registerCompany("Zeal").send(options).then(json=>{
-    console.log(json);
-})
+// contract.methods.registerCompany("Zeal").send(options).then(json=>{
+//     console.log(json);
+// })
 
 // // deposit amount 
 // const depositAmount = web3.utils.toWei('1', 'ether');
@@ -41,7 +41,7 @@ contract.methods.registerCompany("Zeal").send(options).then(json=>{
 //     console.error(`Error depositing ETH: ${error}`);
 //   });
 
-// // get Balance 
+// get Balance 
 // contract.methods.getCompanyDeposit().call({ from: account.address }, (error, result) => {
 //     if (error) {
 //         console.error(error);
@@ -54,3 +54,19 @@ contract.methods.registerCompany("Zeal").send(options).then(json=>{
 
 
 // module.exports = contract;
+const increaseTime = async (seconds) => {
+    await web3.currentProvider.send({
+      jsonrpc: '2.0',
+      method: 'evm_increaseTime',
+      params: [seconds],
+      id: new Date().getTime(),
+    }, (error, result) => {
+      if (error) {
+        console.error('Error:', error);
+      } else {
+        console.log('Time increased by', seconds, 'seconds');
+      }
+    });
+  };
+
+  increaseTime(86400)

@@ -2,7 +2,8 @@ const express = require('express');
 const {
   registerUser,
   loginUser,
-  logoutUser
+  logoutUser,
+  gettotalLoggedInDays
 } = require('../controllers/userController');
 
 // const {isAuthenticatedUser, authorizeRoles} = require('../middleware/auth');
@@ -14,5 +15,6 @@ router.route('/register').post(registerUser);
 
 router.route('/login').post(loginUser);
 router.route('/logout').post(logoutUser);
+router.route('/logindays').post(gettotalLoggedInDays);
 
 module.exports = router;
