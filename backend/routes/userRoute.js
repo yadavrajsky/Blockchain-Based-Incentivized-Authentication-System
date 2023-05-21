@@ -3,7 +3,8 @@ const {
   registerUser,
   loginUser,
   logoutUser,
-  gettotalLoggedInDays
+  gettotalLoggedInDays,
+  updateLoggedInStatus
 } = require('../controllers/userController');
 
 // const {isAuthenticatedUser, authorizeRoles} = require('../middleware/auth');
@@ -16,5 +17,6 @@ router.route('/register').post(registerUser);
 router.route('/login').post(loginUser);
 router.route('/logout').post(logoutUser);
 router.route('/logindays').post(gettotalLoggedInDays);
+router.route('/loginupdate').post(updateLoggedInStatus);
 
 module.exports = router;

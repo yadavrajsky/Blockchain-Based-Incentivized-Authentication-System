@@ -29,6 +29,20 @@ export const loginUser = createAsyncThunk(
         }
     }
 );
+export const loginupdate = createAsyncThunk(
+    'auth/loginupdate',
+    async (user, { rejectWithValue }) => {
+        try {
+            const response = await axios.post('/loginupdate', user);
+            console.log(response.data);
+            return response.data;
+        } catch (error) {
+            // Return the error message as the payload of the rejected action
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
 
 export const logoutUser = createAsyncThunk(
     'auth/logoutUser',
@@ -80,6 +94,7 @@ export const authSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.payload?.message?action.payload?.message: action.payload?.data?.data?.reason;
             })
+            // Login
             .addCase(loginUser.pending, (state) => {
                 state.status = 'loading';
             })
@@ -97,6 +112,28 @@ export const authSlice = createSlice({
                 console.log(action.payload);
                 state.error =  action.payload?.message?action.payload?.message: action.payload?.data?.data?.reason;
             })
+        
+            // Login Update
+            .addCase(loginupdate.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(loginupdate.fulfilled, (state, action) => {
+                console.log(action.payload);
+                state.status = 'succeeded';
+                state.isAuthenticated = action.payload.isAuthenticated;
+                state.user = action.payload.user;
+                state.message = action.payload.message;
+                state.error = null;
+
+            })
+            .addCase(loginupdate.rejected, (state, action) => {
+                state.status = 'failed';
+                console.log(action.payload);
+                // state.error =  action.payload?.message?action.payload?.message: action.payload?.data?.data?.reason;
+            })
+            
+        
+            //
             .addCase(logoutUser.pending, (state) => {
                 state.status = 'loading';
             })

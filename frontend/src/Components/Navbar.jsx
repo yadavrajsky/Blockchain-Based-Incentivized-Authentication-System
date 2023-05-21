@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
-import { clearErrorsAndMessages, logoutUser } from "../features/auth/authSlice";
+import { clearErrorsAndMessages, loginUser, loginupdate, logoutUser } from "../features/auth/authSlice";
 import { showToast } from "./utils/showToast";
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(() => {
@@ -35,6 +35,12 @@ const Navbar = () => {
     } else if (error) showToast(error, false, "Auth");
     dispatch(clearErrorsAndMessages());
   }, [error, message]);
+
+  useEffect(() => {
+    dispatch(loginupdate({wallet:user}));
+  
+  
+  }, [])
   return (
     <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -113,6 +119,7 @@ const Navbar = () => {
             </svg>
           </button>
         </div>
+        
         <div
           className={`${
             showMenu ? "flex" : "hidden" // apply conditional rendering to show/hide menu items
@@ -144,6 +151,7 @@ const Navbar = () => {
             </Link>
           )}
         </div>
+
       </div>
     </nav>
   );

@@ -3,7 +3,7 @@ const { web3, Web3, account } = require("./web3Provider")
 const contractABI = require("./contractABI");
 const ErrorHandler = require("./errorHandler");
 // contract Address
-const contractAddress = "0x20C19d65C13fF8e6aA68d7Ce72084864aa96F039";
+const contractAddress = "0x21525dbeea31890ffEe640CBB34FE3420cB7ab13";
 // contract instance
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 // register Company
@@ -129,6 +129,7 @@ const loginUser = async (userWalletAddress, userPasswordHash) => {
     const data = await contract.methods
       .loginUser(userWalletAddress, pass32bytes)
       .send({ from: account.address, gas: 3000000 });
+    console.log(data);
     return {
       status: true,
       data: data,
@@ -141,6 +142,26 @@ const loginUser = async (userWalletAddress, userPasswordHash) => {
     };
   }
 };
+
+//update login detail 
+const updateLoggedInStatus = async (userWalletAddress) => {
+  try {
+    const response = await contract.methods.updateLoggedInStatus(userWalletAddress).send({ from: account.address })
+    console.log("🚀 ~ file: contractMethodsProvider.js:150 ~ updateLoggedInStatus ~ response:", response);
+    return {
+      status: true,
+      data: response,
+
+    };
+  } catch (error) {
+    console.log("🚀 ~ file: contractMethodsProvider.js:157 ~ updateLoggedInStatus ~ error:", error);
+    
+    return {
+      status: false,
+      error: error,
+    };
+  }
+}
 
 //logout
 const logoutUser = async (walletAddress) => {
@@ -180,5 +201,6 @@ module.exports = {
   getLastLoginTime,
   loginUser,
   doesLoginExist,
-  getTotalLoggedInDays
+  getTotalLoggedInDays,
+  updateLoggedInStatus
 };
