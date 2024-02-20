@@ -7,12 +7,14 @@ For installing truffle library which handles deployments of contracts
 ```
 npm install -g truffle
 ```
+## For blockchain
+
 Go to blockchain folder 
 ```
 cd blockchain
 ```
 Copy all contract in contracts folder 
-
+https://github.com/yadavrajsky/Blockchain-Based-Incentivized-Authentication-System/edit/main/README.md
 Compile the contracts to check any errors. 
 
 
