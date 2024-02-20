@@ -1,4 +1,4 @@
-##Installation 
+## Installation 
 
 Download and install Ganache, Node 
 
@@ -33,3 +33,22 @@ Migrate the contracts on ganache blockchain
 ```
 truffle migrate
 ```
+
+## For Frontend
+
+Go to frontend
+
+```
+cd frontend
+```
+Install dependencies 
+
+````
+npm i
+```
+Run the frontend React server
+
+```
+npm run start
+```
+
