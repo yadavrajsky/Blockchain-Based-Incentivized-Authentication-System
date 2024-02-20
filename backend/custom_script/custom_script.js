@@ -1,8 +1,15 @@
 const Web3 = require("web3");
+// console.log('Step 1: Loading dotenv');
+const dotenv = require('dotenv').config();
+// console.log('Step 2: dotenv result', dotenv);
+
+// Check if the environment variables are correctly loaded
+// console.log('Step 3: Environment variables', process.env);
 // const { options } = require('../routes/userRoute');
 const web3 = new Web3(process.env.RPC_URL); // replace with your Ganache instance URL
-const contract = require("../blockchain/abi/contracts/AuthenticationServiceProvider.json");
-const contractABI = contract.abi;
+const contractABIInfo = require("../blockchain/abi/contracts/AuthenticationServiceProvider.json");
+const contractABI = contractABIInfo.abi;
+
 // Options
 
 //   module.exports=options;
@@ -10,6 +17,7 @@ const contractABI = contract.abi;
 // Set the default account for the provider instance to your own Ethereum account
 
 const privateKey = process.env.company_privateKey;
+// console.log("🚀 ~ privateKey:", privateKey)
 const account = web3.eth.accounts.privateKeyToAccount(privateKey);
 web3.eth.defaultAccount = account.address;
 const options = {
@@ -92,10 +100,9 @@ const resetTime = async () => {
     }
   );
 };
-// configuration()
-const consecutiveLogins = async () => {
+const consecutiveLogins = async (num_of_days) => {
   const userWalletAddress = process.env.userWalletAddress;
-  for (let index = 0; index < 4; index++) {
+  for (let index = 0; index < num_of_days; index++) {
     increaseTime(86400);
 
     const response = await contract.methods
@@ -108,6 +115,7 @@ const consecutiveLogins = async () => {
   }
 };
 //   resetTime()
+configuration()
 
-// consecutiveLogins()
+// consecutiveLogins(6);
 //   increaseTime(86400)

@@ -1,7 +1,7 @@
 const { web3, Web3, account } = require("./web3Provider")
 // Contract ABI
-const contract = require("../blockchain/abi/contracts/AuthenticationServiceProvider.json");
-const contractABI = contract.abi;
+const contractABIInfo = require("../blockchain/abi/contracts/AuthenticationServiceProvider.json");
+const contractABI = contractABIInfo.abi;
 const ErrorHandler = require("./errorHandler");
 // contract Address
 const contractAddress =process.env.contractAddress;
