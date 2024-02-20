@@ -1,9 +1,10 @@
 const { web3, Web3, account } = require("./web3Provider")
 // Contract ABI
-const contractABI = require("./contractABI");
+const contract = require("../blockchain/abi/contracts/AuthenticationServiceProvider.json");
+const contractABI = contract.abi;
 const ErrorHandler = require("./errorHandler");
 // contract Address
-const contractAddress = "0x21525dbeea31890ffEe640CBB34FE3420cB7ab13";
+const contractAddress =process.env.contractAddress;
 // contract instance
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 // register Company
