@@ -43,7 +43,7 @@ cd frontend
 ```
 Install dependencies 
 
-````
+```
 npm i
 ```
 Run the frontend React server
