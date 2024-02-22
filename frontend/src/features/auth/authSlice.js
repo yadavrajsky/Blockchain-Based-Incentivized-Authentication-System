@@ -7,7 +7,6 @@ export const registerUser = createAsyncThunk(
     async (user, { rejectWithValue }) => {
         try {
             const response = await axios.post('/register', user);
-            console.log(response.data);
             return response.data;
         } catch (error) {
             // Return the error message as the payload of the rejected action
@@ -21,7 +20,6 @@ export const loginUser = createAsyncThunk(
     async (user, { rejectWithValue }) => {
         try {
             const response = await axios.post('/login', user);
-            console.log(response.data);
             return response.data;
         } catch (error) {
             // Return the error message as the payload of the rejected action
@@ -34,7 +32,6 @@ export const loginupdate = createAsyncThunk(
     async (user, { rejectWithValue }) => {
         try {
             const response = await axios.post('/loginupdate', user);
-            console.log(response.data);
             return response.data;
         } catch (error) {
             // Return the error message as the payload of the rejected action
@@ -49,7 +46,6 @@ export const logoutUser = createAsyncThunk(
     async (user, { rejectWithValue }) => {
         try {
             const response = await axios.post('/logout', user);
-            // console.log(response); 
             return response.data ;
         } catch (error) {
             // Return the error message as the payload of the rejected action

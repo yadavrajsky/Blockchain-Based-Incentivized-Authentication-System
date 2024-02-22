@@ -19,15 +19,17 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // Route Imports
 const user = require('./routes/userRoute');
+const contractRoutes = require('./routes/contractRoute');
 
 
 app.use('/api/v1', user);
-app.use(express.static(path.join(__dirname, 'frontend', 'build')))
-console.log(path.join(__dirname, 'frontend', 'build'));
+app.use('/api/v1', contractRoutes);
+// app.use(express.static(path.join(__dirname, 'frontend', 'build')))
+// console.log(path.join(__dirname, 'frontend', 'build'));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'))
-})
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'))
+// })
 
 // Middleware for Errors
 app.use(errorMiddleware);

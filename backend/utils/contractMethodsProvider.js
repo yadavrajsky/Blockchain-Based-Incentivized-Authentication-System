@@ -1,76 +1,139 @@
 const { web3, Web3, account } = require("./web3Provider")
 // Contract ABI
-const contractABIInfo = require("../blockchain/abi/contracts/AuthenticationServiceProvider.json");
+const contractABIInfo = require("../contracts/AuthenticationServiceProvider.json");
 const contractABI = contractABIInfo.abi;
 const ErrorHandler = require("./errorHandler");
 // contract Address
 const contractAddress =process.env.contractAddress;
 // contract instance
 const contract = new web3.eth.Contract(contractABI, contractAddress);
-// register Company
-const registerCompany = (companyName) => {
-  contract.methods.registerCompany(companyName).call(
-    {
-      from: account.address,
-      gas: 200000,
-    },
-    (error, result) => {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(result);
-      }
-    }
-  );
-};
-// get Balance
-const getBalance = () => {
-  contract.methods
-    .getCompanyDeposit()
-    .call({ from: account.address }, (error, result) => {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(result);
-      }
-    });
-};
-// deposit Ether
-const depositAsset = (assetAmount) => {
-  const depositAmount = web3.utils.toWei(assetAmount, "ether");
-  contract.methods
-    .addDeposit()
-    .send({ from: account.address, value: depositAmount })
-    .on("transactionHash", (hash) => {
-      console.log(`Transaction hash: ${hash}`);
-    })
-    .on("receipt", (receipt) => {
-      console.log(`Transaction receipt: ${JSON.stringify(receipt, null, 2)}`);
-    })
-    .on("error", (error) => {
-      console.error(`Error depositing ETH: ${error}`);
-    });
-};
-// registeruser
-const registeruser = async (userWalletAddress, userPasswordHash) => {
+
+const registerUser = async (userWalletAddress, userPasswordHash) => {
   try {
-    const pass32bytes = Web3.utils.padRight(
+    const pass32bytes = web3.utils.padRight(
       web3.utils.utf8ToHex(userPasswordHash),
       64
     );
     const register = await contract.methods
-      .registerUser(userWalletAddress, pass32bytes)
-    const data = await register.send({ from: account.address, gas: 3000000 });
+      .registerUser(userWalletAddress, pass32bytes);
+    const gas = await register.estimateGas({ from: account.address });
+    const gasPrice = await web3.eth.getGasPrice();
+    const rawTransaction = {
+      from: account.address,
+      to: contractAddress,
+      gas: web3.utils.toHex(gas),
+      gasPrice: web3.utils.toHex(gasPrice),
+      data: register.encodeABI(),
+      nonce: await web3.eth.getTransactionCount(account.address),
+    };
+    signAndSendTransaction(rawTransaction);
     return {
       status: true,
-      data: data,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      data: error,
+      error: error,
     };
+  }
+};
+
+const loginUser = async (userWalletAddress, userPasswordHash) => {
+  try {
+    const pass32bytes = web3.utils.padRight(
+      web3.utils.utf8ToHex(userPasswordHash),
+      64
+    );
+
+    const gas = await contract.methods
+      .loginUser(userWalletAddress, pass32bytes)
+      .estimateGas({ from: account.address });
+    const gasPrice = await web3.eth.getGasPrice();
+    const rawTransaction = {
+      from: account.address,
+      to: contractAddress,
+      gas: web3.utils.toHex(gas),
+      gasPrice: web3.utils.toHex(gasPrice),
+      data: contract.methods.loginUser(userWalletAddress, pass32bytes).encodeABI(),
+      nonce: await web3.eth.getTransactionCount(account.address),
+    };
+    signAndSendTransaction(rawTransaction);
+    return {
+      status: true,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+};
+
+const updateLoggedInStatus = async (userWalletAddress) => {
+  try {
+    const gas = await contract.methods
+      .updateLoggedInStatus(userWalletAddress)
+      .estimateGas({ from: account.address });
+    const gasPrice = await web3.eth.getGasPrice();
+    const rawTransaction = {
+      from: account.address,
+      to: contractAddress,
+      gas: web3.utils.toHex(gas),
+      gasPrice: web3.utils.toHex(gasPrice),
+      data: contract.methods.updateLoggedInStatus(userWalletAddress).encodeABI(),
+      nonce: await web3.eth.getTransactionCount(account.address),
+    };
+    signAndSendTransaction(rawTransaction);
+    return {
+      status: true,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+};
+
+const logoutUser = async (walletAddress) => {
+  try {
+    const gas = await contract.methods
+      .logoutUser(walletAddress)
+      .estimateGas({ from: account.address });
+    const gasPrice = await web3.eth.getGasPrice();
+    const rawTransaction = {
+      from: account.address,
+      to: contractAddress,
+      gas: web3.utils.toHex(gas),
+      gasPrice: web3.utils.toHex(gasPrice),
+      data: contract.methods.logoutUser(walletAddress).encodeABI(),
+      nonce: await web3.eth.getTransactionCount(account.address),
+    };
+    signAndSendTransaction(rawTransaction);
+    return {
+      status: true,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+};
+
+const signAndSendTransaction = async (rawTransaction) => {
+  try {
+    const signedTransaction = await web3.eth.accounts.signTransaction(
+      rawTransaction,
+     process.env.company_privateKey
+    );
+    const transactionHash = await web3.eth.sendSignedTransaction(
+      signedTransaction.rawTransaction
+    );
+    console.log("Transaction Hash:", transactionHash);
+  } catch (error) {
+    console.error("Error signing and sending transaction:", error);
   }
 };
 
@@ -80,7 +143,6 @@ const getIsLoggedInStatus = async (userAddress) => {
     const response = await contract.methods.getIsLoggedInStatus(account.address, userAddress).call()
     return response;
   } catch (error) {
-
     return error
   }
 };
@@ -89,12 +151,7 @@ const getIsLoggedInStatus = async (userAddress) => {
 const doesLoginExist = async (userAddress) => {
   try {
     const response = await contract.methods.doesLoginExist(userAddress).call()
-    // console.log("🚀 ~ file: contractMethodsProvider.js:93 ~ doesLoginExist ~ response:", response);
-    // send({
-    //   from:account.address
-    // })
     return response;
-
   } catch (error) {
     return error;
   }
@@ -108,7 +165,6 @@ const getTotalLoggedInDays = async (userWalletAddress) => {
       status: true,
       totalLoggedInDays: response
     }
-
   } catch (error) {
     return {
       status: false,
@@ -119,68 +175,7 @@ const getTotalLoggedInDays = async (userWalletAddress) => {
 }
 
 
-// login user
-const loginUser = async (userWalletAddress, userPasswordHash) => {
-  try {
-    const pass32bytes = Web3.utils.padRight(
-      web3.utils.utf8ToHex(userPasswordHash),
-      64
-    );
 
-    const data = await contract.methods
-      .loginUser(userWalletAddress, pass32bytes)
-      .send({ from: account.address, gas: 3000000 });
-    console.log(data);
-    return {
-      status: true,
-      data: data,
-
-    };
-  } catch (error) {
-    return {
-      status: false,
-      error: error,
-    };
-  }
-};
-
-//update login detail 
-const updateLoggedInStatus = async (userWalletAddress) => {
-  try {
-    const response = await contract.methods.updateLoggedInStatus(userWalletAddress).send({ from: account.address })
-    console.log("🚀 ~ file: contractMethodsProvider.js:150 ~ updateLoggedInStatus ~ response:", response);
-    return {
-      status: true,
-      data: response,
-
-    };
-  } catch (error) {
-    console.log("🚀 ~ file: contractMethodsProvider.js:157 ~ updateLoggedInStatus ~ error:", error);
-    
-    return {
-      status: false,
-      error: error,
-    };
-  }
-}
-
-//logout
-const logoutUser = async (walletAddress) => {
-  try {
-    const response = await contract.methods
-      .logoutUser(walletAddress)
-      .send({ from: account.address });
-    return {
-      status: true,
-      data: response,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      error: error,
-    };
-  }
-};
 
 // fetch Last Login Time
 const getLastLoginTime = async (userAddress) => {
@@ -193,10 +188,7 @@ const getLastLoginTime = async (userAddress) => {
 };
 
 module.exports = {
-  registerCompany,
-  getBalance,
-  depositAsset,
-  registeruser,
+  registerUser,
   logoutUser,
   getIsLoggedInStatus,
   getLastLoginTime,

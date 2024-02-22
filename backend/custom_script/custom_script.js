@@ -1,71 +1,64 @@
 const Web3 = require("web3");
-// console.log('Step 1: Loading dotenv');
-const dotenv = require('dotenv').config();
-// console.log('Step 2: dotenv result', dotenv);
-
-// Check if the environment variables are correctly loaded
-// console.log('Step 3: Environment variables', process.env);
-// const { options } = require('../routes/userRoute');
-const web3 = new Web3(process.env.RPC_URL); // replace with your Ganache instance URL
-const contractABIInfo = require("../blockchain/abi/contracts/AuthenticationServiceProvider.json");
+require("dotenv").config();
+const web3 = new Web3(process.env.RPC_URL);
+const contractABIInfo = require("../contracts/AuthenticationServiceProvider.json");
 const contractABI = contractABIInfo.abi;
-
-// Options
-
-//   module.exports=options;
-
-// Set the default account for the provider instance to your own Ethereum account
-
 const privateKey = process.env.company_privateKey;
-// console.log("🚀 ~ privateKey:", privateKey)
 const account = web3.eth.accounts.privateKeyToAccount(privateKey);
 web3.eth.defaultAccount = account.address;
-const options = {
-  from: account.address, // specify the custom sender address as the `from` option
-  gas: 200000, // specify the gas limit for the transaction
-};
-
-// replace with your contract ABI
-const contractAddress = process.env.contractAddress; // replace with your contract address on the Ganache network
-
+const contractAddress = process.env.contractAddress;
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-const configuration = async () => {
-  // register company name
-  await contract.methods
-    .registerCompany(process.env.company_name)
-    .send(options)
-    .then((json) => {
-      console.log(json);
-    });
-  // deposit amount
-  const depositAmount = web3.utils.toWei("1", "ether");
-  await contract.methods
-    .addDeposit()
-    .send({ from: account.address, value: depositAmount })
-    .on("transactionHash", (hash) => {
-      console.log(`Transaction hash: ${hash}`);
-    })
-    .on("receipt", (receipt) => {
-      console.log(`Transaction receipt: ${JSON.stringify(receipt, null, 2)}`);
-    })
-    .on("error", (error) => {
-      console.error(`Error depositing ETH: ${error}`);
-    });
+const signAndSendTransaction = async (rawTransaction) => {
+  try {
+    // Sign the transaction
+    const signedTransaction = await web3.eth.accounts.signTransaction(
+      rawTransaction,
+      privateKey
+    );
+
+    // Send the raw signed transaction
+    const transactionHash = await web3.eth.sendSignedTransaction(
+      signedTransaction.rawTransaction
+    );
+
+    console.log("Transaction Hash:", transactionHash);
+  } catch (error) {
+    console.error("Error in signAndSendTransaction:", error);
+  }
 };
 
-// // get Balance
-// contract.methods.getCompanyDeposit().call({ from: account.address }, (error, result) => {
-//     if (error) {
-//         console.error(error);
-//     } else {
-//         console.log(result);
-//     }
-// });
-// // send(options).then(console.log)
-// console.log(data);
+const registerCompany = async () => {
+  try {
+    const transactionData = contract.methods.registerCompany("Block Auth");
+    const gas = await transactionData.estimateGas({ from: account.address });
+    const gasPrice = await web3.eth.getGasPrice();
+    const rawTransaction = {
+      from: account.address,
+      to: contractAddress,
+      gas: web3.utils.toHex(gas),
+      gasPrice: web3.utils.toHex(gasPrice),
+      data: transactionData.encodeABI(),
+      nonce: await web3.eth.getTransactionCount(account.address),
+    };
+    signAndSendTransaction(rawTransaction);
+  } catch (error) {
+    console.error("Error in registerCompany:", error);
+  }
+};
+const depositAmount = async (value, unit) => {
+  try {
+    const transactionData = contract.methods.addDeposit();
+    const transactionHash = await transactionData.send({
+      from: account.address,
+      value: web3.utils.toWei(value, unit),
+    });
+    console.log("Transaction Hash:", transactionHash);
+  } catch (error) {
+    console.error("Error in depositAmount:", error);
+  }
+};
 
-// module.exports = contract;
 const increaseTime = async (seconds) => {
   await web3.currentProvider.send(
     {
@@ -100,9 +93,16 @@ const resetTime = async () => {
     }
   );
 };
+const configuration = async () => {
+  // register company name
+  await registerCompany();
+  // deposit amount
+  await depositAmount("1", "ether");
+};
+
 const consecutiveLogins = async (num_of_days) => {
   const userWalletAddress = process.env.userWalletAddress;
-  for (let index = 0; index < num_of_days; index++) {
+  for (let index = 1; index <= num_of_days; index++) {
     increaseTime(86400);
 
     const response = await contract.methods
@@ -114,8 +114,7 @@ const consecutiveLogins = async (num_of_days) => {
     );
   }
 };
-//   resetTime()
-configuration()
 
-// consecutiveLogins(6);
-//   increaseTime(86400)
+// configuration();
+
+consecutiveLogins(7);

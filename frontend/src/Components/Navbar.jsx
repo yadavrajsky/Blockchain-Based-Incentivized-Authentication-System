@@ -3,7 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
-import { clearErrorsAndMessages, loginUser, loginupdate, logoutUser } from "../features/auth/authSlice";
+import {
+  clearErrorsAndMessages,
+  loginUser,
+  loginupdate,
+  logoutUser,
+} from "../features/auth/authSlice";
 import { showToast } from "./utils/showToast";
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(() => {
@@ -19,7 +24,6 @@ const Navbar = () => {
   const handleMenuToggle = () => {
     setShowMenu(!showMenu);
     setHamShowMenu(false);
-
   };
   const handleHamMenuToggle = () => {
     setHamShowMenu(!showHamMenu);
@@ -37,13 +41,11 @@ const Navbar = () => {
   }, [error, message]);
 
   useEffect(() => {
-    dispatch(loginupdate({wallet:user}));
-  
-  
-  }, [])
+    dispatch(loginupdate({ wallet: user }));
+  }, []);
   return (
     <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <div className="flex flex-wrap items-center justify-between mx-auto p-4">
         <Link to={"/"} className="flex items-center">
           <img src="/blockauth.png" className="h-8 mr-3" alt="blockauth Logo" />
         </Link>
@@ -77,6 +79,14 @@ const Navbar = () => {
             </div>
           ) : (
             <>
+              <Link to={"/company"}>
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Company
+                </button>
+              </Link>
               <Link to={"/register"}>
                 <button
                   type="button"
@@ -119,7 +129,7 @@ const Navbar = () => {
             </svg>
           </button>
         </div>
-        
+
         <div
           className={`${
             showMenu ? "flex" : "hidden" // apply conditional rendering to show/hide menu items
@@ -151,7 +161,6 @@ const Navbar = () => {
             </Link>
           )}
         </div>
-
       </div>
     </nav>
   );

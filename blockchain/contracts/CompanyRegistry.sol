@@ -243,4 +243,8 @@
             );
             LoginDetails[walletAddress].isLoggedIn = false;
         }
+        function getRegisteredCompanyName() public view returns (string memory) {
+            return companies[msg.sender].name;
+        }
+    
     }

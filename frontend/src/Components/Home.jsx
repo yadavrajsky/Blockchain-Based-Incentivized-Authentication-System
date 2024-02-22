@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 
 const Home = () => {
   return (
-    <div className="container min-h-screen">
+    <div className="min-h-screen">
       <main>
         <div className="text-center">
           <div className="py-6 sm:px-0">
@@ -16,7 +16,7 @@ const Home = () => {
           </div>
         </div>
       </main>
-      <p className="justify-center mx-7">
+      <p className="justify-center mx-7 text-justify">
         <span className="text-4xl ml-4">W</span>e propose to develop an
         authentication system that combines a client-server model with block
         chain technology. Companies will register on the block chain and deposit

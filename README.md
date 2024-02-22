@@ -52,3 +52,32 @@ Run the frontend React server
 npm run start
 ```
 
+Visit the application at [http://localhost:3000](http://localhost:3000)
+
+## For Backend
+
+Go to backend 
+
+```
+cd backend
+```
+
+Setup .env file in backend root directory
+
+```
+PORT=4000
+DB_URI=mongodb://127.0.0.1:27017
+company_privateKey=your_company_private_key
+contractAddress=your_contract_address
+userWalletAddress=user_wallet_address
+RPC_URL="http://127.0.0.1:7545"
+company_name="Company Name"
+```
+
+Install dependencies 
+
+```
+npm i
+```
+Register the comp  
+

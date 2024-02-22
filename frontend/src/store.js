@@ -2,6 +2,7 @@ import authReducer from './features/auth/authSlice';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import contractSlice from './features/contract/contractSlice';
 
 const persistConfig = {
   key: 'root',
@@ -10,6 +11,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  contract:contractSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

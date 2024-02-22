@@ -2,7 +2,7 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require("../models/userModel");
 const {
-  registeruser,
+  registerUser,
   loginUser,
   getIsLoggedInStatus,
   getLastLoginTime,
@@ -29,7 +29,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     })
 
   }
-  const response = await registeruser(wallet, password);
+  const response = await registerUser(wallet, password);
 
   if (response.status === true) {
     await User.create({
