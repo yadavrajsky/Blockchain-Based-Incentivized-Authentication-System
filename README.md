@@ -9,6 +9,21 @@
 
 The Blockchain-Based Authentication and Incentive System is a cutting-edge solution designed to elevate user authentication, security, and engagement for companies. By harnessing the power of blockchain technology, this system bids farewell to conventional authentication methods like email or usernames. Companies registering on the blockchain will deposit an initial asset, acting as an incentive for their active users.
 
+<h2 align="center">📚 Research Paper</h2>
+
+<p align="center">
+  <a href="https://ijsrem.com/download/advance-authentication-system-using-block-chain-network/">
+    <img src="https://img.shields.io/badge/Research%20Paper-Blockchain%20Authentication-blue">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://ijsrem.com/download/advance-authentication-system-using-block-chain-network/">
+    <img src="https://img.shields.io/badge/Read-Here-orange.svg">
+  </a>
+</p>
+
+
 <p align="center">
   <img src="https://github.com/yadavrajsky/Blockchain-Based-Incentivized-Authentication-System/assets/70022991/e0f2fa6e-e5bd-42b2-98e3-551a22706398" alt="System Overview">
   
@@ -19,7 +34,6 @@ The Blockchain-Based Authentication and Incentive System is a cutting-edge solut
  <img src="https://github.com/yadavrajsky/Blockchain-Based-Incentivized-Authentication-System/assets/70022991/6720b9ac-4176-4054-8a87-ad4cae18f90c" alt="System Overview">
 
 </p>
-
 
 ## 🎁 Features
 
