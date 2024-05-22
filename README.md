@@ -108,6 +108,27 @@ To get started with the Blockchain-Based Authentication and Incentive System, fo
 ```
 4. Compile the contracts:
 
+### Update Solidity Version in Contracts
+
+All contracts within the `blockchain/contracts` directory should be updated explicitly  to the Solidity version as `0.8.0`. Here is an example header for the contracts:
+
+```solidity
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity 0.8.0;
+```
+### Truffle Configuration
+
+The Truffle configuration file (`truffle-config.ts`) should be modified to use the Solidity compiler version `0.8.0`. Below is the updated compiler configuration:
+
+```ts
+// truffle-config.ts
+// Configure your compilers
+compilers: {
+  solc: {
+    version: "0.8.0",      // Fetch exact version from solc-bin (default: Truffle's version)
+  }
+},
+```
 ```bash
    truffle compile
 ```
