@@ -41,6 +41,7 @@ const Navbar = () => {
   }, [error, message]);
 
   useEffect(() => {
+    if(user && isAuthenticated)
     dispatch(loginupdate({ wallet: user }));
   }, []);
   return (

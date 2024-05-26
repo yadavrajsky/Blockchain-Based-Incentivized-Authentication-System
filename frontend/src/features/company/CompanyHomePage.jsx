@@ -169,7 +169,7 @@ function CompanyHomePage() {
         console.error("Error fetching company name:", error);
       }
     }
-    if (contractABI.length && contractAddress) getCompanyName();
+    if (contractABI?.length && contractAddress) getCompanyName();
   }, [contractABI, contractAddress,web3]);
   return (
     <div className="container mx-auto my-8 p-8 bg-gray-100 border rounded-md shadow-lg">

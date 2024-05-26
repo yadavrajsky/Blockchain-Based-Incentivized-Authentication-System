@@ -64,7 +64,7 @@ const UserForm = ({handleSubmit}) => {
             </div>
             <div className="flex justify-around items-center">
                 <button
-                    onClick={handleSubmitClick}
+                    onClick={(e)=>handleSubmitClick(e)}
                     className="py-2 text-black font-semibold px-3 my-2 bg-amber-400 hover:bg-amber-500 transition-all active:border-amber-500 rounded-lg"
                 >
                     Submit

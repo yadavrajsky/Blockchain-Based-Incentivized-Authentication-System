@@ -90,62 +90,71 @@ To get started with the Blockchain-Based Authentication and Incentive System, fo
 
 ### Smart Contracts Setup
 
-1. Copy all smart contracts in the `contracts` folder into the `blockchain` directory.
+1. Open a terminal and go to `contracts` folder into the `blockchain` directory.
+
+```bash
+cd blockchain/contracts
+```
 2. Install dependencies:
 
 ```bash
    npm install
 ```
-3. Configure the `.env` file and `truffle-config.js` in the `blockchain` directory:
+3. Configure the `.env` file and `hardhat.config.ts` in the `blockchain` directory:
+
+- For Sepolia Testnet, use: 
+  `API_URL=https://eth-sepolia.g.alchemy.com/v2/your-api-key`
+- For Ganache, use: 
+  `API_URL=http://127.0.0.1:7545`
+- The private key should belong to the owner of the smart contract.
 
 ```env
-   # For network deployment, we need mnemonics - Mnemonics of the contract owner
-   MNEMONIC="your mnemonics"
-
-   # For Sepolia - you can use RPC_URL=https://eth-sepolia.g.alchemy.com/v2/yourAPIKEY
-   # For Ganache
-   RPC_URL="http://127.0.0.1:7545"
+API_URL=http://127.0.0.1:7545
+# Make sure the private key has a prefix of 0x.... (If it doesn't exist, add it)
+PRIVATE_KEY=your_private_key
 ```
-4. Compile the contracts:
 
 ### Update Solidity Version in Contracts
 
-All contracts within the `blockchain/contracts` directory should be updated explicitly  to the Solidity version as `0.8.0`. Here is an example header for the contracts:
+To ensure all contracts within the `blockchain/contracts` directory use the Solidity version `0.8.24` and to configure your Hardhat environment to use the same version.
+
+Ensure that each Solidity contract file in the `blockchain/contracts` directory has the following header:
 
 ```solidity
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.0;
+pragma solidity ^0.8.24;
+// Rest of the code
 ```
-### Truffle Configuration
+### Hardhat Configuration
 
-The Truffle configuration file (`truffle-config.ts`) should be modified to use the Solidity compiler version `0.8.0`. Below is the updated compiler configuration:
+In your `hardhat.config.ts` file, set the Solidity version to `0.8.24`. 
 
 ```ts
-// truffle-config.ts
-// Configure your compilers
-compilers: {
-  solc: {
-    version: "0.8.0",      // Fetch exact version from solc-bin (default: Truffle's version)
-  }
-},
-```
-```bash
-   truffle compile
+const config: HardhatUserConfig = {
+  solidity: "0.8.24", //Similar to Solidity version 
+  //Rest of the code
+};
 ```
 
-5. Migrate the contracts:
+### Compile the contracts:
 
-  - For Ganache
 ```bash
-  truffle migrate
+npx hardhat compile
 ```
-  - For network `truffle migrate --network network_name` eg. sepolia
+
+After compiling the smart contracts, copy the `AuthenticationServiceProvider.json` file from the `blockchain/contracts/AuthServiceProvide.sol/AuthenticationServiceProvider.json` directory and paste it into the `backend/contracts` directory.
+
+### Deploying Contract
+
 ```bash
-  truffle migrate --network sepolia
+npx hardhat run deployments/deploy.js --network networkName
 ```
-6. Make note of contract address 
-7. A `build` folder will be generated containing contract ABIs of the deployed contract.
-8. Copy the `contracts` folder inside the `build` directory and paste it into root directory of the `backend` 
+After executing the previous command, you should see something like this:
+
+```bash
+Contract Deployed to Address: 0xc5cCbE0F358643b3DdCC13d2667......50
+```
+`0xc5cCbE0F358643b3DdCC13d2667......50` is your smart contract address.
 
 ## Setting up Backend
 
@@ -171,6 +180,7 @@ compilers: {
   #For Ganache
   RPC_URL="http://127.0.0.1:7545"
 ```
+
 5. Start the backend server
 ```bash
    npm run dev
@@ -228,7 +238,7 @@ After seven consecutive days of login, the user will receive automatic rewards. 
 ```bash
   cd backend
 ```
-1. Update the `userWalletAddress` in the `.env` file with the user's wallet address for whom you want to simulate seven days of consecutive login.
+1. Update the `userWalletAddress` in the `.env` file with the user's wallet address for whom you want to simulate seven days of consecutive login (Only Ganache).
 2. Run the following command:
 
 ```bash
