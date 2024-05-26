@@ -1,6 +1,9 @@
-const Web3 = require("web3");
 require("dotenv").config();
-const web3 = new Web3(process.env.RPC_URL);
+// Web3 instance
+const {Web3} = require("web3");
+const provider = new Web3.providers.HttpProvider(process.env.RPC_URL);
+// Web3 Provider Instance
+const web3 = new Web3(provider);
 const contractABIInfo = require("../contracts/AuthenticationServiceProvider.json");
 const contractABI = contractABIInfo.abi;
 const privateKey = process.env.company_privateKey;
@@ -8,7 +11,7 @@ const account = web3.eth.accounts.privateKeyToAccount(privateKey);
 web3.eth.defaultAccount = account.address;
 const contractAddress = process.env.contractAddress;
 const contract = new web3.eth.Contract(contractABI, contractAddress);
-
+contract.defaultAccount = account.address;
 const signAndSendTransaction = async (rawTransaction) => {
   try {
     // Sign the transaction

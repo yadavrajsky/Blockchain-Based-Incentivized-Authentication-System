@@ -85,7 +85,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     //user is already logged In
     if (loggedInStatus === true) {
       const lastLoginTime = await getLastLoginTime(wallet);
-      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+      const currentTimeInSeconds = BigInt(Math.floor(Date.now() / 1000));
       //if current login is next consecutive day
       if ((currentTimeInSeconds - lastLoginTime) > 86400) {
         // if (true) {
@@ -247,7 +247,7 @@ exports.logoutUser = catchAsyncErrors(async (req, res, next) => {
   const loginStatus = await getIsLoggedInStatus(wallet);
   if (loginStatus === true) {
     const response = await logoutUser(wallet);
-    console.log(response);
+    // console.log(response);
     if (response.status === true) {
       return res.status(200).json({
         user: null,

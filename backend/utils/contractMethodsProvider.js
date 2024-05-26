@@ -7,7 +7,7 @@ const ErrorHandler = require("./errorHandler");
 const contractAddress =process.env.contractAddress;
 // contract instance
 const contract = new web3.eth.Contract(contractABI, contractAddress);
-
+contract.defaultAccount =account.address;
 const registerUser = async (userWalletAddress, userPasswordHash) => {
   try {
     const pass32bytes = web3.utils.padRight(
@@ -153,6 +153,7 @@ const doesLoginExist = async (userAddress) => {
     const response = await contract.methods.doesLoginExist(userAddress).call()
     return response;
   } catch (error) {
+    console.log(error);
     return error;
   }
 
